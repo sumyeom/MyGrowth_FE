@@ -1,99 +1,111 @@
 <template>
-  <div class="max-w-md mx-auto p-4">
-    <!-- 헤더 -->
-    <div class="flex items-center justify-between mb-4">
-      <span class="text-lg font-bold">{{ currentMonthLabel }}</span>
-      <button @click="toggleCalendar" class="text-2xl">📅</button>
-    </div>
+  <div class="mg-auth-container mg-bg-gradient px-4">
+    <div class="mg-card mg-card-p w-full max-w-md mx-auto">
+      <!-- 헤더 -->
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-lg font-bold flex items-center gap-2">{{ currentMonthLabel }}</span>
+        <div class="flex items-center gap-2">
+          <button @click="goToProfile" class="text-2xl hover:scale-110 transition" title="프로필">
+            👤
+          </button>
+          <button @click="addRoutine" class="text-2xl hover:scale-110 transition" title="루틴 추가">
+            ➕
+          </button>
+          <button @click="toggleCalendar" class="text-2xl hover:scale-110 transition" title="달력">
+            📅
+          </button>
+        </div>
+      </div>
 
-    <!-- 달력 -->
-    <VCalendar
-      v-if="showCalendar"
-      v-model="selectedDate"
-      :from-page="selectedDate"
-      @dayclick="onDateChange"
-      :attributes="attributes"
-      class="mb-4 rounded-lg shadow-sm"
-    />
+      <!-- 달력 -->
+      <VCalendar
+        v-if="showCalendar"
+        v-model="selectedDate"
+        :from-page="selectedDate"
+        @dayclick="onDateChange"
+        :attributes="attributes"
+        class="mb-4 rounded-lg shadow-sm"
+      />
 
-    <!-- 요일 슬라이더 (주 단위) -->
-    <div ref="sliderRef" class="keen-slider mb-4">
-      <div v-for="(week, wIndex) in weeks" :key="wIndex" class="keen-slider__slide flex justify-between">
-        <div
-          v-for="(day, dIndex) in week"
-          :key="dIndex"
-          @click="selectDate(day)"
-          class="flex flex-col items-center cursor-pointer"
-        >
-          <div class="text-sm mb-1">{{ day.label }}</div>
+      <!-- 요일 슬라이더 (주 단위) -->
+      <div ref="sliderRef" class="keen-slider mb-4">
+        <div v-for="(week, wIndex) in weeks" :key="wIndex" class="keen-slider__slide flex justify-between">
           <div
-            class="w-12 h-12 flex items-center justify-center rounded-full transition-transform transition-colors duration-300"
-            :class="day.date.toDateString() === selectedDate.toDateString()
-                      ? 'bg-myBlue text-white scale-100'
-                      : 'bg-gray-200 text-black'"
+            v-for="(day, dIndex) in week"
+            :key="dIndex"
+            @click="selectDate(day)"
+            class="flex flex-col items-center cursor-pointer"
           >
-            {{ day.date.getDate() }}
+            <div class="text-sm mb-1">{{ day.label }}</div>
+            <div
+              class="w-12 h-12 flex items-center justify-center rounded-full transition-transform transition-colors duration-300"
+              :class="day.date.toDateString() === selectedDate.toDateString()
+                        ? 'bg-myBlue text-white scale-100'
+                        : 'bg-gray-200 text-black'"
+            >
+              {{ day.date.getDate() }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- 루틴 리스트 -->
-    <div class="p-4 space-y-3">
-      <div
-        v-for="routine in routines"
-        :key="routine.id"
-        class="flex items-center bg-white rounded-2xl shadow p-3 space-x-3"
-      >
-        <!-- 체크 아이콘 -->
-        <button
-          @click="toggleCheck(routine)"
-          class="w-8 h-8 flex items-center justify-center rounded-full border"
-          :class="routine.checked ? 'bg-mygreen text-white' : 'bg-gray-100 text-gray-400'"
+      <!-- 루틴 리스트 -->
+      <div class="p-0 space-y-3">
+        <div
+          v-for="routine in routineList"
+          :key="routine.id"
+          class="flex items-center bg-white rounded-2xl shadow p-3 space-x-3"
         >
-          <span v-if="routine.checked">✔</span>
-        </button>
+          <!-- 체크 아이콘 -->
+          <button
+            @click="toggleCheck(routine)"
+            class="w-8 h-8 flex items-center justify-center rounded-full border"
+            :class="routine.isSuccess ? 'bg-mygreen text-white' : 'bg-gray-100 text-gray-400'"
+          >
+            <span v-if="routine.isSuccess">✔</span>
+          </button>
 
-        <!-- 내용 -->
-        <div class="flex flex-col">
-          <!-- 카테고리 태그 -->
-          <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-600 w-fit">
-            {{ routine.category }}
-          </span>
-          <!-- 루틴 제목 -->
-          <span class="text-base font-semibold mt-1">
-            {{ routine.title }}
-          </span>
+          <!-- 내용 -->
+          <div class="flex flex-col">
+            <!-- 카테고리 태그 -->
+            <!-- <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-600 w-fit">
+              {{ routine.category }}
+            </span> -->
+            <!-- 루틴 제목 -->
+            <span class="text-base font-semibold mt-1">
+              {{ routine.title }}
+            </span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- 피드백 팝업 -->
-    <div
-      v-if="showPopup"
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50"
-    >
-      <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative animate-fade-in">
-        <!-- 닫기 버튼 -->
-        <button
-          @click="showPopup = false"
-          class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
-        >
-          ✕
-        </button>
+      <!-- 피드백 팝업 -->
+      <div
+        v-if="showPopup"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50"
+      >
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative animate-fade-in">
+          <!-- 닫기 버튼 -->
+          <button
+            @click="showPopup = false"
+            class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+          >
+            ✕
+          </button>
 
-        <!-- 내용 -->
-        <h2 class="text-xl font-semibold mb-3">이번 주 AI 피드백 ✨</h2>
-        <!-- <p class="text-gray-700 leading-relaxed"> -->
-          <!-- {{ feedback }} -->
+          <!-- 내용 -->
+          <!-- <h2 class="text-xl font-semibold mb-3">이번 주 AI 피드백 ✨</h2> -->
+          <!-- <p class="text-gray-700 leading-relaxed"> -->
+            <!-- {{ feedback }} -->
 
-        <!-- </p> -->
-         <p class="bg-white rounded-2xl shadow p-4 text-gray-800 text-center leading-relaxed">
-        이번 주에는 
-        <span class="font-semibold text-indigo-400">3개의 루틴 중 2개</span>
-        를 달성했어요! <br />
-        <span class="text-green-400 font-medium">꾸준히 잘하고 있어요 👏</span>
-        </p>
+          <!-- </p> -->
+          <p class="bg-white rounded-2xl shadow p-4 text-gray-800 text-center leading-relaxed">
+          이번 주에는 
+          <span class="font-semibold text-indigo-400">3개의 루틴 중 2개</span>
+          를 달성했어요! <br />
+          <span class="text-green-400 font-medium">꾸준히 잘하고 있어요 👏</span>
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -101,17 +113,29 @@
 
 <script setup>
 import { ref, computed, onMounted  } from 'vue';
+import { findByDateRoutine, routineCheckin } from '@/api/routine'; 
+import { useRouter } from 'vue-router';
 import KeenSlider from 'keen-slider'; 
 import 'keen-slider/keen-slider.min.css';
 
-// 오늘을 2025년 8월 31일로 가정
-const today = new Date(2025, 7, 31); // 7 = 8월
 const showCalendar = ref(false);
-const selectedDate = ref(new Date(today));
+const selectedDate = ref(new Date());
 const sliderRef = ref(null);
 let sliderInstance = null; // eslint-disable-line no-unused-vars
-const showPopup = ref(true);
+const showPopup = ref(false);
 const feedback = ref("");// eslint-disable-line no-unused-vars
+const router = useRouter();
+
+const goToProfile = () => {
+  router.push('/profile');
+}
+
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
 // 초기 기준 주 시작
 const initialWeekStart = new Date();
@@ -173,24 +197,39 @@ const weeks = computed(() => {
   return result;
 });
 
-// 선택된 날짜 루틴
-const routines = ref([
-  { id: 1, title: '아침 운동', category: '🏃', date: new Date() },
-  { id: 2, title: '스터디', category:'📕', date: new Date() },
-  { id: 3, title: '저녁 산책', category:'🏃', date: new Date(new Date().setDate(new Date().getDate() + 1)) },
-]);
 
-function toggleCheck(routine){
-  routine.checked = !routine.checked;
+const routineList = ref([]);
+
+// 루틴 데이터 로드
+const loadRoutine = async (date) => {
+  try{
+    const res = await findByDateRoutine(date);
+    routineList.value = res.data.content;
+    console.log('루틴 리스트 :' , routineList.value);
+    
+  }catch(err){
+    console.error('루틴 리스트 로드 실패 : ', err);
+  }
 }
 
-// const routinesForSelectedDate = computed(() =>
-//   routines.value.filter(r => r.date.toDateString() === selectedDate.value.toDateString())
-// );
+onMounted(()=>{
+  const formattedDate = formatDate(selectedDate.value);
+  loadRoutine(formattedDate);
+})
+
+
+async function toggleCheck(routine){
+  routine.isSuccess = !routine.isSuccess;
+  const formattedDate = formatDate(selectedDate.value);
+  await routineCheckin(routine.id, formattedDate);
+}
+
 
 // 날짜 선택
 const selectDate = (day) => {
   selectedDate.value = day.date;
+  const formattedDate = formatDate(selectedDate.value);
+  loadRoutine(formattedDate);
 }
 
 // 달력에서 날짜 선택 시 주 이동
@@ -204,6 +243,8 @@ const onDateChange = (day) => {
     if (index !== -1) sliderInstance.moveToIdx(index);
   }
 
+  const formattedDate = formatDate(selectedDate.value);
+  loadRoutine(formattedDate);
  
   showCalendar.value = false;
 
@@ -228,22 +269,9 @@ onMounted(() => {
   if (idx !== -1) sliderInstance.moveToIdx(idx);
 });
 
-// 루틴 리스트 진입 시 실행
-// onMounted(async () => {
-//   try {
-//     const res = await fetch("/api/weekly-feedback", {
-//       credentials: "include",
-//     });
-//     const data = await res.json();
-
-//     if (data.feedback) {
-//       feedback.value = data.feedback;
-//       showPopup.value = true; // 팝업 띄우기
-//     }
-//   } catch (e) {
-//     console.error("피드백 가져오기 실패", e);
-//   }
-// });
+const addRoutine = () => {
+  router.push('/routines-create'); // 루틴 생성 페이지가 있다면
+}
 </script>
 
 <style>

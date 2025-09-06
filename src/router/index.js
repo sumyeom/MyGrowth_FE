@@ -1,13 +1,38 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { tokenManager } from '@/api/axios';
 import LoginForm from '@/components/Auth/LoginForm.vue';
 import GoalSetup from '@/components/GoalSetup/GoalSetup.vue';
 import RoutineList from '@/components/Routine/RoutineList.vue';
+import RoutineCreate from '@/components/Routine/RoutineCreate.vue';
+import SignupForm from '@/components/Auth/SignupForm.vue';
+import FindIdForm from '@/components/Auth/FindIdForm.vue';
+import FindPasswordForm from '@/components/Auth/FindPasswordForm.vue';
+import Profile from '@/components/Profile/ProfileView.vue';
 
 const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', component: LoginForm },
-  { path: '/goal-setup', component: GoalSetup },
-  { path: '/routines', component: RoutineList },
+  { 
+    path: '/goal-setup', 
+    component: GoalSetup,
+    meta: { requiresAuth: true }
+  },
+  { path: '/routines',
+     component: RoutineList,
+     meta: { requiresAuth: true }
+  },
+  { path: '/routines-create',
+    component: RoutineCreate,
+    meta: { requiresAuth: true }
+  },
+  { 
+    path: '/profile', 
+    component: Profile,
+    meta: { requiresAuth: true }
+  },
+  { path: '/signup', component: SignupForm },
+  { path: '/find-id', component: FindIdForm },
+  { path: '/find-password', component: FindPasswordForm },
 ];
 
 const router = createRouter({

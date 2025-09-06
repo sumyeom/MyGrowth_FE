@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { tokenManager } from '@/api/axios';
 import LoginForm from '@/components/Auth/LoginForm.vue';
 import GoalSetup from '@/components/GoalSetup/GoalSetup.vue';
 import RoutineList from '@/components/Routine/RoutineList.vue';

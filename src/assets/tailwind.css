@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* component layer: shared UI primitives */
+@layer components {
+  .mg-bg-gradient {
+    background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+  }
+  .mg-card {
+    @apply bg-white rounded-xl shadow-xl text-center;
+  }
+  .mg-card-p {
+    @apply p-6 sm:p-8;
+  }
+  .mg-title {
+    @apply text-2xl font-bold text-gray-800 mb-6 flex items-center justify-center gap-2;
+  }
+  .mg-input {
+    @apply w-full px-4 py-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-myBlue focus:border-transparent transition;
+  }
+  .mg-btn {
+    @apply w-full py-3 rounded-lg font-semibold text-white bg-myBlue hover:bg-blue-600 transition;
+  }
+  .mg-btn-sub {
+    @apply w-full py-3 rounded-lg font-semibold text-myBlue bg-blue-50 hover:bg-blue-100 transition;
+  }
+  .mg-link-row {
+    @apply mt-3 text-sm text-gray-500 flex items-center justify-center gap-2;
+  }
+  .mg-auth-container {
+    @apply min-h-screen flex items-center justify-center;
+  }
+}

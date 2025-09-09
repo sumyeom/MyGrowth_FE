@@ -3,6 +3,7 @@ import LoginForm from '@/components/Auth/LoginForm.vue';
 import GoalSetup from '@/components/GoalSetup/GoalSetup.vue';
 import RoutineList from '@/components/Routine/RoutineList.vue';
 import RoutineCreate from '@/components/Routine/RoutineCreate.vue';
+import RoutineUpdate from '@/components/Routine/RoutineUpdate.vue';
 import SignupForm from '@/components/Auth/SignupForm.vue';
 import FindIdForm from '@/components/Auth/FindIdForm.vue';
 import FindPasswordForm from '@/components/Auth/FindPasswordForm.vue';
@@ -23,6 +24,12 @@ const routes = [
   { path: '/routines-create',
     component: RoutineCreate,
     meta: { requiresAuth: true }
+  },
+  { path: '/routine-update/:id',
+    name: 'RoutineUpdate', 
+    component: RoutineUpdate,
+    meta: { requiresAuth: true },
+    props: true
   },
   { 
     path: '/profile', 

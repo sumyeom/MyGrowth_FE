@@ -198,13 +198,13 @@ const router = useRouter();
 
 // 요일 데이터
 const weekDays = [
+    { label : '일', value : 'SUNDAY'},
     { label : '월', value : 'MONDAY'},
     { label : '화', value : 'TUESDAY'},
     { label : '수', value : 'WEDNESDAY'},
     { label : '목', value : 'THURSDAY'},
     { label : '금', value : 'FRIDAY'},
-    { label : '토', value : 'SATURDAY'},
-    { label : '일', value : 'SUNDAY'}
+    { label : '토', value : 'SATURDAY'}
 ]
 
 const selectedDate = ref(new Date());
@@ -234,6 +234,14 @@ const formattedDate = computed(() => {
     return `${year}-${month}-${day}`;
 })
 
+const formatEndDate = computed(() => {
+    if(!selectedEndDate.value) return null;
+    const year = selectedEndDate.value.getFullYear();
+    const month = String(selectedEndDate.value.getMonth() + 1).padStart(2, '0');
+    const day = String(selectedEndDate.value.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+})
+
 // 루틴 데이터
 const routine = reactive({
     title:'',
@@ -245,7 +253,7 @@ const routine = reactive({
     goalCount:1,
     isPublic:true,
     startDate:formattedDate,
-    endDate:null
+    endDate:formatEndDate
 })
 
 // 연별 반복용 입력값

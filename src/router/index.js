@@ -3,10 +3,12 @@ import LoginForm from '@/components/Auth/LoginForm.vue';
 import GoalSetup from '@/components/GoalSetup/GoalSetup.vue';
 import RoutineList from '@/components/Routine/RoutineList.vue';
 import RoutineCreate from '@/components/Routine/RoutineCreate.vue';
+import RoutineUpdate from '@/components/Routine/RoutineUpdate.vue';
 import SignupForm from '@/components/Auth/SignupForm.vue';
 import FindIdForm from '@/components/Auth/FindIdForm.vue';
 import FindPasswordForm from '@/components/Auth/FindPasswordForm.vue';
 import Profile from '@/components/Profile/ProfileView.vue';
+import RoutineStats from '@/components/Routine/RoutineStats.vue';
 
 const routes = [
   { path: '/', redirect: '/login' },
@@ -24,10 +26,20 @@ const routes = [
     component: RoutineCreate,
     meta: { requiresAuth: true }
   },
+  { path: '/routine-update/:id',
+    name: 'RoutineUpdate', 
+    component: RoutineUpdate,
+    meta: { requiresAuth: true },
+    props: true
+  },
   { 
     path: '/profile', 
     component: Profile,
     meta: { requiresAuth: true }
+  },
+  { 
+    path: '/routine-stats', 
+    component: RoutineStats
   },
   { path: '/signup', component: SignupForm },
   { path: '/find-id', component: FindIdForm },

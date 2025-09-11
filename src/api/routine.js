@@ -33,3 +33,8 @@ export function updateRoutine(id, deleteType, selectedDate, title, description, 
         params:{deleteType, selectedDate}
     });
 }
+
+
+export function getSuccessRate(){
+    return authAxios.get(`/routines/statistics/success-rate`);
+}

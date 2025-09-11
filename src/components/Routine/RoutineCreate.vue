@@ -198,13 +198,13 @@ const router = useRouter();
 
 // 요일 데이터
 const weekDays = [
+    { label : '일', value : 'SUNDAY'},
     { label : '월', value : 'MONDAY'},
     { label : '화', value : 'TUESDAY'},
     { label : '수', value : 'WEDNESDAY'},
     { label : '목', value : 'THURSDAY'},
     { label : '금', value : 'FRIDAY'},
-    { label : '토', value : 'SATURDAY'},
-    { label : '일', value : 'SUNDAY'}
+    { label : '토', value : 'SATURDAY'}
 ]
 
 const selectedDate = ref(new Date());

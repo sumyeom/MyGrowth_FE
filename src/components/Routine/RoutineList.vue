@@ -64,9 +64,9 @@
               <button
                 @click="toggleCheck(routine)"
                 class="w-8 h-8 flex items-center justify-center rounded-full border"
-                :class="routine.isSuccess ? 'bg-mygreen text-white' : 'bg-gray-100 text-gray-400'"
+                :class="routine.success ? 'bg-mygreen text-white' : 'bg-gray-100 text-gray-400'"
               >
-                <span v-if="routine.isSuccess">✔</span>
+                <span v-if="routine.success">✔</span>
               </button>
 
               <!-- 내용 -->
@@ -332,8 +332,9 @@ const loadRoutine = async (date) => {
 
 // 루틴 체크인
 async function toggleCheck(routine){
-  routine.isSuccess = !routine.isSuccess;
+  routine.success = !routine.success;
   const formattedDate = formatDate(selectedDate.value);
+  console.log(formattedDate);
   await routineCheckin(routine.id, formattedDate);
 }
 
@@ -401,7 +402,7 @@ onMounted(() => {
   const idx = weeks.value.findIndex(week => week.some(d => d.date.toDateString() === selectedDate.value.toDateString()));
   if (idx !== -1) sliderInstance.moveToIdx(idx);
 
-  // 루틴 리스트 로드드
+  // 루틴 리스트 로드
   const formattedDate = formatDate(selectedDate.value);
   loadRoutine(formattedDate);
 
